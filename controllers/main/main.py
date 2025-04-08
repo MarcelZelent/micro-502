@@ -14,9 +14,9 @@ import lib.mapping_and_planning_examples as mapping_and_planning_examples
 import time, random
 import threading
 
-exp_num = 4                    # 0: Coordinate Transformation, 1: PID Tuning, 2: Kalman Filter, 3: Motion Planning, 4: Project
+exp_num = 4                  # 0: Coordinate Transformation, 1: PID Tuning, 2: Kalman Filter, 3: Motion Planning, 4: Project
 control_style = 'path_planner'      # 'keyboard' or 'path_planner'
-rand_env = False                # Randomise the environment
+rand_env = True                # Randomise the environment
 
 # Global variables for handling threads
 latest_sensor_data = None
@@ -660,6 +660,68 @@ def path_planner_thread(drone):
                 current_setpoint = new_setpoint
 
         time.sleep(0.01)
+
+import cv2
+import numpy as np
+
+# def find_pink_center(frame):
+#     # Convert to HSV color space
+#     hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+    
+#     # Define lower and upper bounds for pink color in HSV
+#     lower_pink = np.array([140, 50, 50])   # Lower bound
+#     upper_pink = np.array([170, 255, 255]) # Upper bound
+    
+#     # Create mask to filter pink color
+#     mask = cv2.inRange(hsv, lower_pink, upper_pink)
+    
+#     # Find contours in the mask
+#     contours, _ = cv2.findContours(mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    
+#     if contours:
+#         # Find the largest contour
+#         largest_contour = max(contours, key=cv2.contourArea)
+        
+#         # Get the center of the pink area
+#         M = cv2.moments(largest_contour)
+#         if M["m00"] != 0:
+#             cx = int(M["m10"] / M["m00"])
+#             cy = int(M["m01"] / M["m00"])
+#             return (cx, cy)
+    
+#     return None
+
+# def camera_feed():
+#     cap = cv2.VideoCapture(0)
+    
+#     while True:
+#         ret, frame = cap.read()
+#         if not ret:
+#             break
+        
+#         # Apply the pink filter in real-time
+#         hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+#         lower_pink = np.array([140, 50, 50])
+#         upper_pink = np.array([170, 255, 255])
+#         mask = cv2.inRange(hsv, lower_pink, upper_pink)
+#         filtered = cv2.bitwise_and(frame, frame, mask=mask)
+        
+#         cv2.imshow("Filtered Feed", filtered)
+        
+#         key = cv2.waitKey(1) & 0xFF
+        
+#         if key == ord(' '):  # Capture image on spacebar press
+#             center = find_pink_center(frame)
+#             if center:
+#                 print(f"Center of pink area: {center}")
+#             else:
+#                 print("No pink area detected")
+        
+#         elif key == ord('q'):  # Quit on 'q' press
+#             break
+    
+#     cap.release()
+#     cv2.destroyAllWindows()
     
 
 if __name__ == '__main__':
@@ -674,11 +736,15 @@ if __name__ == '__main__':
         planner_thread = threading.Thread(target=path_planner_thread, args=(drone,))
         planner_thread.daemon = True
         planner_thread.start()
-   
+    
+    
+
     try:
         # Simulation loops
         for step in range(100000):
-            
+
+           
+
             if exp_num == 2:
                 sensor_data = drone.read_KF_estimates()
                 if np.round(drone.getTime(),2) == drone.KF.plot_time_limit:
@@ -692,8 +758,27 @@ if __name__ == '__main__':
             if drone.PID_update_last_time == 0.0 or np.round(drone.dt_ctrl,3) >= drone.ctrl_update_period/1000: #Only execute at first point and in control rate step
 
                 if control_style == 'keyboard':
+
+                    frame = drone.read_camera()
+                    # print(frame)
+                    # cv2.imshow("frame", frame)
+                    # cv2.waitKey(1)
+                    
+        
+                    # # Apply the pink filter in real-time
+                    # hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+                    # lower_pink = np.array([140, 50, 50])
+                    # upper_pink = np.array([170, 255, 255])
+                    # mask = cv2.inRange(hsv, lower_pink, upper_pink)
+                    # filtered = cv2.bitwise_and(frame, frame, mask=mask)
+                    
+                    # cv2.imshow("Filtered Feed", filtered)
+                    # cv2.imshow("frame", frame)
+    
+
                     # Get the control commands from the keyboard
                     control_commands = drone.action_from_keyboard(sensor_data)
+                    
                     
                     # Rotate the control commands from the body reference frame to the inertial reference frame
                     euler_angles = [sensor_data['roll'], sensor_data['pitch'], sensor_data['yaw']]
@@ -702,6 +787,9 @@ if __name__ == '__main__':
 
                     # Call the PID controller to get the motor commands
                     motorPower = drone.PID_CF.keys_to_pwm(drone.dt_ctrl, control_commands, sensor_data)    
+
+                    # cap.release()
+                    # cv2.destroyAllWindows() 
 
                 elif control_style == 'path_planner':
                     # # Update the setpoint
@@ -750,5 +838,7 @@ if __name__ == '__main__':
         running = False
         planner_thread.join()
 
+        cap.release()
+        cv2.destroyAllWindows() 
 
 
