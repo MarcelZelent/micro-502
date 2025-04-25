@@ -8,7 +8,7 @@ In the remaining weeks of the course, all students will then compete as groups t
 Simulation Task overview (individual work)
 -------------------------
 
-.. image:: race_track.png
+.. image:: arc_simulation.png
   :width: 650
   :alt: objective figure
 
@@ -21,7 +21,7 @@ The simulation arena is shown in the figure above. Your task is composed of mult
 Please note the following:
 
 - The position of the take-off pad is fixed.
-- The gate positions are randomly assigned. However, there will always be five gates arranged in a circle-like fashion which must be completed in counter clock-wise order.
+- The gate positions are randomly assigned. However, there will always be five gates arranged in a circle-like fashion which must be completed in counter clock-wise order. The gate centers are each located in piecewise circular sectors of 30 degrees as shown in the figure above.
 - The clock starts when you leave the take-off region and stops when you enter it again.
 - The origin and the coordinate system for your reference are indicated in the figure above. The Z coordinate is directed upwards (out of the page).
 - A maximum time limit for your run in simulation is set at 240 seconds in real-time speed. Only the phases which you have completed up to this cutoff time will determine your grade for this task according to the metrics defined below.
@@ -34,12 +34,18 @@ Here is an example:
   :width: 650
   :alt: demo video in simulation
 
-Your grade in this simulation exercise will be determined according to the following **Performance metrics**:
+Your grade in this simulation exercise will be determined the following way: 
 
-- **Grade 3.5**: Take off
-- **Grade 3.5 - 4.75**: For each gate passed through in the first lap you get + 0.25
-- **Grade 4.75 - 6.0**: Average time over the second and third lap compared to the rest of the class
-- Solutions that go against the spirit of the exercise will not be accepted (e.g. finding bugs and exploiting them).
+**Overall Grading:**
+
+- We run your code on 3 randomly generated worlds (they are the same 3 used for everyone).
+- Each world/map will be graded separately.
+- Your final grade will be the average of your grades across all maps.
+
+**Grading per Map:**
+
+- You start with a grade of **3.5**. Then for each gate you pass through in lap 1, you get an additional 0.25 so you can reach a **max of 4.75**.
+- For the remaining **1.25**, you are ranked first on total number of **gates missed in lap 1, 2, and 3** and then among students with the same number of missed gates, you're further ranked by your **average lap time**. From 0-17% percentile you get no additional points, 17-33% you get 0.25, and so on ...
 
 Hardware Task overview (group work)
 -----------------------
@@ -84,7 +90,7 @@ The following table provides the schedule of the crazy-practical project.
 | Week 7, April 1           | Simulation development, Q&A
 | Week 8, April 8           | Simulation development, Q&A
 | Week 9, April 15          | Simulation development, Q&A
-                            | Simulation due 23:59 April 28, submit code in Moodle
+                            | Simulation due 11:59 am (noon) April 29, submit code in Moodle
                             | Select the hardware group in Moodle
 | Week 10, April 29         | Hardware introduction, pick up your drone by group
 | Week 11, May 6            | Hardware development, Q&A
