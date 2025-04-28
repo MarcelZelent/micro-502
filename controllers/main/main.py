@@ -16,7 +16,7 @@ import threading
 
 exp_num = 4                    # 0: Coordinate Transformation, 1: PID Tuning, 2: Kalman Filter, 3: Motion Planning, 4: Project
 control_style = 'path_planner'      # 'keyboard' or 'path_planner'
-rand_env = False                # Randomise the environment
+rand_env = True                # Randomise the environment
 
 # Global variables for handling threads
 latest_sensor_data = None
