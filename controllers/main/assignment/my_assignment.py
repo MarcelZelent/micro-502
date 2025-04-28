@@ -102,7 +102,7 @@ def get_command(sensor_data, camera_data, dt):
 
         # Build planner object without calling its __init__
         mp            = MotionPlanner3D.__new__(MotionPlanner3D)
-        mp.disc_steps = 100
+        mp.disc_steps = 400
         mp.vel_lim    = 7.0
         mp.acc_lim    = 50.0
         mp.path       = pos_wp
